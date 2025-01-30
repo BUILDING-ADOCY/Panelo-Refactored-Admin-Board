@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        screens: {
+          '3xl': '1792px', // Add extra breakpoint if needed
+        },
+  
       },
     },
   },

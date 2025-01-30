@@ -26,6 +26,13 @@
     --text-secondary: #b0b0b0;
     --hover-bg: #222;
   }
+  button, [role="button"], .card {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  
+
 }
 
 /* Apply Styles */
