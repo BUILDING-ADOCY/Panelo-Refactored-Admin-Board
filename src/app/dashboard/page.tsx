@@ -9,7 +9,8 @@ import { FaComment, FaCog, FaRobot } from "react-icons/fa";
 
 export default function DashboardPage() {
   return (
-    <motion.main 
+    <motion.main
+      style={{ fontFamily: "Arial Black" }}
       className="p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#121212]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -28,9 +29,9 @@ export default function DashboardPage() {
             transition={{ repeat: Infinity, duration: 3 }}
             className="text-4xl"
           >
-        
+            {/* Optionally, add a logo or icon here */}
           </motion.div>
-          <h1 className="text-2xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl lg:text-4xl font-bold text-white">
             Admin Dashboard
           </h1>
         </div>
@@ -53,7 +54,7 @@ export default function DashboardPage() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.6 }}
       >
-        <h2 className="text-xl lg:text-2xl font-semibold mb-6 text-gray-100">
+        <h2 className="text-xl lg:text-2xl font-semibold mb-6 text-white">
           Chatbot Controls
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
@@ -62,15 +63,13 @@ export default function DashboardPage() {
               title: "Live Chat Monitor",
               description: "Monitor and manage real-time conversations",
               icon: <FaComment className="text-2xl" />,
-              button: "View Live Chats",
-              color: "blue"
+              button: "View Live Chats"
             },
             { 
               title: "AI Training",
               description: "Update knowledge base and model configurations",
               icon: <FaCog className="text-2xl" />,
-              button: "Manage Training",
-              color: "green"
+              button: "Manage Training"
             }
           ].map((item, index) => (
             <motion.div
@@ -79,19 +78,19 @@ export default function DashboardPage() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 + index * 0.1, duration: 0.4 }}
             >
-              <Card className="hover:border-white/20 transition-colors group">
-                <CardContent className="p-6">
+              <Card className="hover:border-white/20 transition-colors group border border-transparent">
+                <CardContent className="p-6 relative bg-black rounded-xl shadow-lg">
                   <div className="flex flex-col h-full">
-                    <div className={`mb-4 p-3 rounded-xl bg-${item.color}-500/10 w-fit`}>
+                    <div className="mb-4 p-3 rounded-xl bg-white/10 w-fit">
                       <motion.div
                         animate={{ rotate: [0, 10, -10, 0] }}
                         transition={{ repeat: Infinity, duration: 4 }}
-                        className={`text-${item.color}-400`}
+                        className="text-white"
                       >
                         {item.icon}
                       </motion.div>
                     </div>
-                    <h3 className="text-lg lg:text-xl font-semibold text-gray-100 mb-2">
+                    <h3 className="text-lg lg:text-xl font-semibold text-white mb-2">
                       {item.title}
                     </h3>
                     <p className="text-gray-400 mb-6 flex-1">
@@ -100,13 +99,14 @@ export default function DashboardPage() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`w-full bg-${item.color}-500/20 hover:bg-${item.color}-500/30 text-${item.color}-400 px-6 py-3 rounded-lg transition-all flex items-center justify-between`}
+                      className="w-full bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-lg transition-all flex items-center justify-between"
                     >
                       <span>{item.button}</span>
                       <FaRobot className="text-lg" />
                     </motion.button>
                   </div>
-                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(200px_at_50%_150%,rgba(99,102,241,0.1),transparent)]" />
+                  {/* Subtle white radial gradient overlay on hover */}
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(200px_at_50%_150%,rgba(255,255,255,0.1),transparent)]" />
                 </CardContent>
               </Card>
             </motion.div>

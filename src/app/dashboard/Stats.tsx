@@ -10,28 +10,28 @@ const statsData = [
     title: "Total Queries", 
     value: "12,345", 
     icon: <FaChartLine />,
-    trend: "14.2%",
-    color: "blue"
+    trend: "14.2%"
   },
   { 
     title: "Avg. Response Time", 
     value: "1.2s", 
     icon: <FaClock />,
-    trend: "↓ 0.3s",
-    color: "green"
+    trend: "↓ 0.3s"
   },
   { 
     title: "Active Users", 
     value: "5,678", 
     icon: <FaUsers />,
-    trend: "↑ 22.1%",
-    color: "purple"
+    trend: "↑ 22.1%"
   },
 ];
 
 export default function Stats() {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+    <section
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 bg-black p-6"
+      style={{ fontFamily: "Arial Black" }}
+    >
       {statsData.map((stat, index) => (
         <motion.div
           key={index}
@@ -42,15 +42,15 @@ export default function Stats() {
           whileTap={{ scale: 0.98 }}
           className="relative group"
         >
-          <Card className="hover:border-white/20 transition-all">
-            <CardContent className="p-6">
+          <Card className="hover:border-white/20 transition-all border border-transparent">
+            <CardContent className="p-6 bg-black rounded-xl shadow-lg relative">
               <div className="flex justify-between items-start">
                 <div className="flex flex-col">
-                  <div className={`mb-4 p-3 rounded-xl bg-${stat.color}-500/10 w-fit`}>
+                  <div className="mb-4 p-3 rounded-xl bg-white/10 w-fit">
                     <motion.div
                       animate={{ rotate: [0, 10, -10, 0] }}
                       transition={{ repeat: Infinity, duration: 4 }}
-                      className={`text-${stat.color}-400 text-2xl`}
+                      className="text-white text-2xl"
                     >
                       {stat.icon}
                     </motion.div>
@@ -62,14 +62,15 @@ export default function Stats() {
                     {stat.value}
                   </p>
                 </div>
-                <div className={`flex items-center gap-2 bg-${stat.color}-500/20 px-3 py-1 rounded-full`}>
-                  <FaArrowUp className={`text-${stat.color}-400 text-sm`} />
-                  <span className={`text-${stat.color}-400 text-sm font-medium`}>
+                <div className="flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full">
+                  <FaArrowUp className="text-white text-sm" />
+                  <span className="text-white text-sm font-medium">
                     {stat.trend}
                   </span>
                 </div>
               </div>
-              <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(200px_at_50%_150%,rgba(99,102,241,0.1),transparent)]" />
+              {/* Subtle white radial gradient overlay on hover */}
+              <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(200px_at_50%_150%,rgba(255,255,255,0.1),transparent)]" />
             </CardContent>
           </Card>
         </motion.div>
