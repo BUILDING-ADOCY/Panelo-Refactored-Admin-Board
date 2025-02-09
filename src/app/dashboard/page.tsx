@@ -1,13 +1,29 @@
-// src/app/dashboard/page.tsx
 "use client";
 
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebaseClient";
+
 import Stats from "./Stats";
 import UserMetrics from "./UserMetrics";
 import { Card, CardContent } from "@/components/Card";
 import { FaComment, FaCog, FaRobot } from "react-icons/fa";
 
 export default function DashboardPage() {
+  // Firebase Auth side effect
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is logged in: ", user.email);
+      } else {
+        console.log("User is logged out");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <motion.main
       style={{ fontFamily: "Arial Black" }}
@@ -24,7 +40,7 @@ export default function DashboardPage() {
         transition={{ delay: 0.2, duration: 0.6 }}
       >
         <div className="flex items-center gap-4">
-          <motion.div 
+          <motion.div
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ repeat: Infinity, duration: 3 }}
             className="text-4xl"
@@ -37,7 +53,9 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full">
           <div className="w-2 h-2 bg-green-400 rounded-full" />
-          <span className="text-sm text-gray-300">All Systems Operational</span>
+          <span className="text-sm text-gray-300">
+            All Systems Operational
+          </span>
         </div>
       </motion.header>
 
@@ -48,7 +66,7 @@ export default function DashboardPage() {
       <UserMetrics />
 
       {/* Chatbot Management Section */}
-      <motion.section 
+      <motion.section
         className="mt-8 lg:mt-12"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -59,18 +77,18 @@ export default function DashboardPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
           {[
-            { 
+            {
               title: "Live Chat Monitor",
               description: "Monitor and manage real-time conversations",
               icon: <FaComment className="text-2xl" />,
-              button: "View Live Chats"
+              button: "View Live Chats",
             },
-            { 
+            {
               title: "AI Training",
               description: "Update knowledge base and model configurations",
               icon: <FaCog className="text-2xl" />,
-              button: "Manage Training"
-            }
+              button: "Manage Training",
+            },
           ].map((item, index) => (
             <motion.div
               key={index}
