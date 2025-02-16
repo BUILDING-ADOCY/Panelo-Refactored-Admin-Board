@@ -1,57 +1,41 @@
-// src/app/api/faq/[id]/route.ts
+// app/api/faq/route.ts
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma"; // Adjust if needed
+import { getSocketInstance } from "../../socket";
 
-// GET /api/faq/[id]
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: Request) {
   try {
-    const faqId = parseInt(params.id, 10);
-    const faq = await prisma.fAQ.findUnique({
-      where: { id: faqId },
-    });
-    if (!faq) {
-      return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
-    }
-    return NextResponse.json(faq);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
+    // Expecting { question, answer, userId } in the request body
+    const { question, answer } = await req.json();
 
-// PATCH /api/faq/[id]
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const faqId = parseInt(params.id, 10);
-    const { question, answer } = await request.json();
-
-    const updatedFAQ = await prisma.fAQ.update({
-      where: { id: faqId },
-      data: { question, answer },
+    // 1) Store the FAQ in DB
+    const newFaq = await prisma.fAQ.create({
+      data: {
+        question,
+        answer,
+        // userId, // Make sure this matches the field name in your Prisma schema
+      },
     });
-    return NextResponse.json(updatedFAQ);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
 
-// DELETE /api/faq/[id]
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const faqId = parseInt(params.id, 10);
-    await prisma.fAQ.delete({
-      where: { id: faqId },
+    // 2) Create a notification
+    const notification = await prisma.notification.create({
+      data: {
+        title: "New FAQ Added",
+        message: `A new FAQ: "${question}" has been added.`,
+        category: "update",
+        isRead: false,
+        userId, // Again, ensure this matches your Notification model field
+        createdAt: new Date(),
+      },
     });
-    return NextResponse.json({ message: "FAQ deleted" });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+
+    // 3) Emit real-time notification
+    const io = getSocketInstance(); // Make sure initSocket() has run somewhere
+    io.emit("new_notification", notification);
+
+    return NextResponse.json({ message: "FAQ added!", newFaq });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Failed to add FAQ" }, { status: 500 });
   }
 }

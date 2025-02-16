@@ -28,6 +28,8 @@ model User {
   email    String  @unique
   password String
   createdAt DateTime @default(now())
+
+  Notification Notification[]
 }
 
 model FAQ {
@@ -36,4 +38,16 @@ model FAQ {
   answer    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  userID    String
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  message   String
+  category  String   @default("update")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

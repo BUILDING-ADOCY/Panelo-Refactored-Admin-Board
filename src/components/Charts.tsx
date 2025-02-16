@@ -1,7 +1,7 @@
-// src/components/Charts.tsx
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import {
   LineChart,
   Line,
@@ -28,12 +28,36 @@ const chatbotData = [
 
 export default function Charts() {
   return (
-    <section className="bg-gray-900 shadow-xl rounded-xl p-6 text-white">
-      <h2 className="text-2xl font-bold mb-6">📊 Chatbot Activity</h2>
+    <motion.section 
+      className="bg-gradient-to-br from-gray-800 to-gray-900 shadow-xl rounded-xl p-6 text-white"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      <motion.h2 
+        className="text-3xl font-extrabold mb-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        Chatbot Activity
+      </motion.h2>
 
       {/* LINE CHART - Queries Over Time */}
-      <div className="mb-10">
-        <h3 className="text-xl font-semibold mb-4">📈 Queries Per Day</h3>
+      <motion.div 
+        className="mb-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      >
+        <motion.h3 
+          className="text-2xl font-semibold mb-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          Queries Per Day
+        </motion.h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart
             data={chatbotData}
@@ -45,17 +69,17 @@ export default function Charts() {
                 <stop offset="100%" stopColor="#82ca9d" />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="#444" strokeDasharray="3 3" />
-            <XAxis dataKey="day" tick={{ fill: "#fff" }} />
-            <YAxis tick={{ fill: "#fff" }} />
+            <CartesianGrid stroke="#555" strokeDasharray="3 3" />
+            <XAxis dataKey="day" tick={{ fill: "#ddd" }} />
+            <YAxis tick={{ fill: "#ddd" }} />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#333",
+                backgroundColor: "#222",
                 border: "none",
                 borderRadius: "8px",
               }}
             />
-            <Legend wrapperStyle={{ color: "#fff" }} />
+            <Legend wrapperStyle={{ color: "#ddd" }} />
             <Line
               type="monotone"
               dataKey="queries"
@@ -66,31 +90,42 @@ export default function Charts() {
             />
           </LineChart>
         </ResponsiveContainer>
-      </div>
+      </motion.div>
 
       {/* BAR CHART - Active Users Over Time */}
-      <div>
-        <h3 className="text-xl font-semibold mb-4">👥 Active Users Per Day</h3>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+      >
+        <motion.h3 
+          className="text-2xl font-semibold mb-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          Active Users Per Day
+        </motion.h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={chatbotData}
             margin={{ top: 20, right: 20, bottom: 20, left: 0 }}
           >
-            <CartesianGrid stroke="#444" strokeDasharray="3 3" />
-            <XAxis dataKey="day" tick={{ fill: "#fff" }} />
-            <YAxis tick={{ fill: "#fff" }} />
+            <CartesianGrid stroke="#555" strokeDasharray="3 3" />
+            <XAxis dataKey="day" tick={{ fill: "#ddd" }} />
+            <YAxis tick={{ fill: "#ddd" }} />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#333",
+                backgroundColor: "#222",
                 border: "none",
                 borderRadius: "8px",
               }}
             />
-            <Legend wrapperStyle={{ color: "#fff" }} />
+            <Legend wrapperStyle={{ color: "#ddd" }} />
             <Bar dataKey="users" fill="#82ca9d" barSize={50} />
           </BarChart>
         </ResponsiveContainer>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

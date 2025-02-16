@@ -17,10 +17,15 @@ export async function GET() {
 // POST /api/faq - create a new FAQ
 export async function POST(request: Request) {
   try {
-    const { question, answer } = await request.json();
+    // Extract question, answer, and userID from the request body
+    // (Remove 'createdBy' since it's not in your FAQ model)
+    const { question, answer, userID } = await request.json();
+
+    // Create a new FAQ with only the fields that exist in your schema
     const newFAQ = await prisma.fAQ.create({
-      data: { question, answer },
+      data: { question, answer, userID },
     });
+
     return NextResponse.json(newFAQ, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

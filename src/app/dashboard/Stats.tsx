@@ -1,4 +1,3 @@
-// src/app/dashboard/Stats.tsx
 "use client";
 
 import { motion } from "framer-motion";
@@ -29,7 +28,7 @@ const statsData = [
 export default function Stats() {
   return (
     <section
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 bg-black p-6"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 p-6"
       style={{ fontFamily: "Arial Black" }}
     >
       {statsData.map((stat, index) => (
@@ -43,7 +42,7 @@ export default function Stats() {
           className="relative group"
         >
           <Card className="hover:border-white/20 transition-all border border-transparent">
-            <CardContent className="p-6 bg-black rounded-xl shadow-lg relative">
+            <CardContent className="p-6 rounded-xl shadow-lg relative">
               <div className="flex justify-between items-start">
                 <div className="flex flex-col">
                   <div className="mb-4 p-3 rounded-xl bg-white/10 w-fit">

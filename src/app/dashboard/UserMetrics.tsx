@@ -10,7 +10,7 @@ import { FiAlertCircle } from "react-icons/fi";
 export default function UserMetrics() {
   return (
     <section
-      className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-black p-6"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6"
       // Enforce "Arial Black" for all text in this section.
       style={{ fontFamily: "Arial Black" }}
     >
@@ -21,9 +21,9 @@ export default function UserMetrics() {
         transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
       >
         <Card className="hover:border-white/30 transition-colors border border-transparent">
-          <CardContent className="relative group bg-black p-4 rounded-xl shadow-lg">
+          <CardContent className="relative group p-6 rounded-xl shadow-lg">
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-white/10 rounded-xl">
+              <div className="p-6 bg-white/10 rounded-xl">
                 <FaQuestionCircle className="text-white text-2xl" />
               </div>
               <div>
@@ -60,7 +60,7 @@ export default function UserMetrics() {
         transition={{ duration: 0.4, delay: 0.1, type: "spring", stiffness: 100 }}
       >
         <Card className="hover:border-white/30 transition-colors border border-transparent">
-          <CardContent className="relative group bg-black p-4 rounded-xl shadow-lg">
+          <CardContent className="relative group p-4 rounded-xl shadow-lg">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-white/10 rounded-xl">
                 <FaClock className="text-white text-2xl" />
@@ -91,24 +91,24 @@ export default function UserMetrics() {
         </Card>
       </motion.div>
 
-      {/* Charts Section */}
+      {/* Charts Section with an enhanced, aesthetic header */}
       <motion.div
         className="col-span-full"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
       >
         <Card className="bg-black border border-white/10 shadow-lg">
-          <CardContent className="pt-6 bg-black">
+          <CardContent className="pt-6 ">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-semibold text-white">
+              <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white">
                 Usage Analytics
               </h3>
               <div className="flex gap-2">
-                <button className="text-sm px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/20">
+                <button className="text-sm px-3 py-1 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/15 transition-colors border border-white/20">
                   Last 7 days
                 </button>
-                <button className="text-sm px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/20">
+                <button className="text-sm px-3 py-1 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/15 transition-colors border border-white/20">
                   Last 30 days
                 </button>
               </div>

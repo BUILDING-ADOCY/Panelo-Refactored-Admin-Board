@@ -1,4 +1,3 @@
-// src/app/faq/add/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -7,6 +6,9 @@ import { useRouter } from "next/navigation";
 export default function AddFaqPage() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  // For demonstration, we hard-code a user ID. In a real app, fetch this from the logged-in user.
+  const userID = "12345678-1234-5678-1234-567812345678";
+
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -15,9 +17,11 @@ export default function AddFaqPage() {
       const res = await fetch("/api/faq", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, answer }),
+        body: JSON.stringify({ question, answer, userID }),
       });
-      if (!res.ok) throw new Error(`Error: ${res.statusText}`);
+      if (!res.ok) {
+        throw new Error(`Error: ${res.statusText}`);
+      }
       router.push("/faq");
     } catch (err: any) {
       alert(err.message);
@@ -36,7 +40,7 @@ export default function AddFaqPage() {
             <input
               id="question"
               type="text"
-              className="border border-black rounded-md w-full p-3 focus:outline-none focus:ring-2 focus:ring-black"
+              className="border border-black rounded-md w-full p-3"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               required
@@ -48,7 +52,7 @@ export default function AddFaqPage() {
             </label>
             <textarea
               id="answer"
-              className="border border-black rounded-md w-full p-3 focus:outline-none focus:ring-2 focus:ring-black text-black"
+              className="border border-black rounded-md w-full p-3 text-black"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               required
