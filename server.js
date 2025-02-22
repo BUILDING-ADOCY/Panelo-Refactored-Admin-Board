@@ -8,43 +8,39 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+let io;
+
+function getIoInstance() {
+  if (!io) {
+    throw new Error("Socket.io instance not initialized!");
+  }
+  return io;
+}
+global.getIoInstance = getIoInstance; // Attach the getter to global
+
 app.prepare().then(() => {
   const expressApp = express();
   const server = http.createServer(expressApp);
 
-  // Attach Socket.IO to our HTTP server
-  const io = new Server(server, {
+  // Initialize Socket.IO
+  io = new Server(server, {
     cors: {
-      origin: "*", // In dev, allow all. In production, specify your domain(s).
+      origin: "*", // In production, set your allowed domains here
     },
   });
 
-  // Listen for new connections
   io.on("connection", (socket) => {
     console.log("Socket connected:", socket.id);
-
-    // Example custom event
-    socket.on("ping_server", (data) => {
-      console.log("Received from client:", data);
-      // Reply back to the client
-      socket.emit("pong_client", { msg: "Hello from server!" });
-    });
-
-    // Handle disconnections
     socket.on("disconnect", () => {
       console.log("Socket disconnected:", socket.id);
     });
   });
 
-  // Let Next.js handle all other routes (including /api/...)
-  expressApp.all("*", (req, res) => {
-    return handle(req, res);
-  });
+  // Let Next.js handle all other routes
+  expressApp.all("*", (req, res) => handle(req, res));
 
-  // Start the server
   const port = process.env.PORT || 3000;
-  server.listen(port, (err) => {
-    if (err) throw err;
+  server.listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
   });
 });

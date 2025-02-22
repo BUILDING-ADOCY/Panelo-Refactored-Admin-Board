@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+
+
 /* Light Mode (Default) */
 :root {
   --background: #ffffff;
@@ -33,6 +37,15 @@
 
   
 
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(-12deg); }
+  100% { transform: translateX(100%) rotate(-12deg); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
 }
 
 /* Apply Styles */

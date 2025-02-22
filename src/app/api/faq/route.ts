@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/faq - list all FAQs
+// GET /api/faq - List all FAQs
 export async function GET() {
   try {
     const faqs = await prisma.fAQ.findMany({
@@ -14,14 +14,13 @@ export async function GET() {
   }
 }
 
-// POST /api/faq - create a new FAQ
+// POST /api/faq - Create a new FAQ
 export async function POST(request: Request) {
   try {
-    // Extract question, answer, and userID from the request body
-    // (Remove 'createdBy' since it's not in your FAQ model)
+    // Extract question, answer, and userID from the request body.
     const { question, answer, userID } = await request.json();
 
-    // Create a new FAQ with only the fields that exist in your schema
+    // Create a new FAQ with the provided fields.
     const newFAQ = await prisma.fAQ.create({
       data: { question, answer, userID },
     });

@@ -14,6 +14,12 @@ export default {
         screens: {
           '3xl': '1792px', // Add extra breakpoint if needed
         },
+        status: {
+          positive: "#00FF87",
+          negative: "#FF4D4D",
+          warning: "#FFD600",
+          neutral: "#FFFFFF"
+        }
   
       },
     },
