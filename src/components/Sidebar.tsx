@@ -81,12 +81,12 @@ export default function Sidebar() {
             text="Dashboard" 
             active={pathname === "/dashboard"} 
           />
-          <SidebarItem
+          {/* <SidebarItem
             href="/notifications"
             icon={<FaBell className="w-5 h-5" />}
             text="Notifications"
             active={pathname === "/notifications"}
-          />
+          /> */}
           <SidebarItem 
             href="/settings" 
             icon={<FaCog className="w-5 h-5" />} 

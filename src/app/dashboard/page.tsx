@@ -4,60 +4,39 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
+import { FiActivity, FiMessageSquare, FiSettings, FiDatabase } from "react-icons/fi";
+import { TbRobot } from "react-icons/tb";
 
 import Stats from "./Stats";
 import UserMetrics from "./UserMetrics";
 import { Card, CardContent } from "@/components/Card";
-import { FaComment, FaCog, FaRobot } from "react-icons/fa";
 
 export default function DashboardPage() {
-  // Firebase Auth side effect
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("User is logged in: ", user.email);
-      } else {
-        console.log("User is logged out");
-      }
+      user ? console.log("User is logged in: ", user.email) : console.log("User is logged out");
     });
-
     return () => unsubscribe();
   }, []);
 
   return (
     <motion.main
-      style={{ fontFamily: "Arial Black" }}
-      className="p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#121212]"
+      className="min-h-screen bg-neutral-950 p-6 sm:p-8 lg:p-12"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
       {/* Header Section */}
-      <motion.header
-        className="mb-8 lg:mb-12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-      >
-        <div className="flex items-center gap-4">
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 3 }}
-            className="text-4xl"
-          >
-            {/* Optionally, add a logo or icon here */}
-          </motion.div>
-          <h1 className="text-2xl lg:text-4xl font-bold text-white">
-            Admin Dashboard
-          </h1>
+      <header className="mb-12 flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-semibold text-white lg:text-4xl">Dashboard</h1>
+          <p className="text-sm text-neutral-400">Platform Analytics & Management</p>
         </div>
-        <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full">
-          <div className="w-2 h-2 bg-green-400 rounded-full" />
-          <span className="text-sm text-gray-300">
-            All Systems Operational
-          </span>
+        <div className="flex items-center gap-3 rounded-lg bg-neutral-900 px-4 py-2">
+          <div className="h-2 w-2 rounded-full bg-emerald-500" />
+          <span className="text-sm text-neutral-300">Operational Status: Normal</span>
         </div>
-      </motion.header>
+      </header>
 
       {/* Stats Section */}
       <Stats />
@@ -65,72 +44,76 @@ export default function DashboardPage() {
       {/* User Metrics Section */}
       <UserMetrics />
 
-      {/* Chatbot Management Section */}
-      <motion.section
-        className="mt-8 lg:mt-12"
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-      >
-        <h2 className="text-xl lg:text-2xl font-semibold mb-6 text-white">
-          Chatbot Controls
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+      {/* AI Management Section */}
+      <section className="mt-12">
+        <h2 className="mb-8 text-2xl font-semibold text-white">AI Management</h2>
+        <div className="grid gap-6 md:grid-cols-2">
           {[
             {
-              title: "Live Chat Monitor",
-              description: "Monitor and manage real-time conversations",
-              icon: <FaComment className="text-2xl" />,
-              button: "View Live Chats",
+              title: "Conversation Monitor",
+              description: "Real-time chat monitoring and intervention",
+              icon: <FiMessageSquare className="text-xl" />,
+              action: "Access Live Console",
             },
             {
-              title: "AI Training",
-              description: "Update knowledge base and model configurations",
-              icon: <FaCog className="text-2xl" />,
-              button: "Manage Training",
+              title: "Model Training",
+              description: "Knowledge base updates and version control",
+              icon: <FiDatabase className="text-xl" />,
+              action: "Configure Training",
+            },
+            {
+              title: "Performance Analytics",
+              description: "Model accuracy and response metrics",
+              icon: <FiActivity className="text-xl" />,
+              action: "View Reports",
+            },
+            {
+              title: "System Settings",
+              description: "Platform configuration and integrations",
+              icon: <FiSettings className="text-xl" />,
+              action: "Manage Settings",
             },
           ].map((item, index) => (
             <motion.div
               key={index}
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 + index * 0.1, duration: 0.4 }}
+              transition={{ delay: 0.2 + index * 0.1, duration: 0.4 }}
             >
-              <Card className="hover:border-white/20 transition-colors group border border-transparent">
-                <CardContent className="p-6 relative bg-black rounded-xl shadow-lg">
-                  <div className="flex flex-col h-full">
-                    <div className="mb-4 p-3 rounded-xl bg-white/10 w-fit">
-                      <motion.div
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ repeat: Infinity, duration: 4 }}
-                        className="text-white"
-                      >
-                        {item.icon}
-                      </motion.div>
+              <Card className="group relative overflow-hidden border border-neutral-800 bg-neutral-900">
+                <CardContent className="p-6">
+                  <div className="relative z-10 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
+                        <motion.div
+                          animate={{ scale: [1, 1.1, 1] }}
+                          transition={{ repeat: Infinity, duration: 3 }}
+                          className="text-emerald-500"
+                        >
+                          {item.icon}
+                        </motion.div>
+                      </div>
+                      <TbRobot className="text-xl text-neutral-700" />
                     </div>
-                    <h3 className="text-lg lg:text-xl font-semibold text-white mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-400 mb-6 flex-1">
-                      {item.description}
-                    </p>
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-medium text-white">{item.title}</h3>
+                      <p className="text-sm text-neutral-400">{item.description}</p>
+                    </div>
                     <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-full bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-lg transition-all flex items-center justify-between"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full rounded-lg bg-neutral-800 py-2 text-sm font-medium text-neutral-300 transition-colors hover:bg-neutral-700"
                     >
-                      <span>{item.button}</span>
-                      <FaRobot className="text-lg" />
+                      {item.action}
                     </motion.button>
                   </div>
-                  {/* Subtle white radial gradient overlay on hover */}
-                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(200px_at_50%_150%,rgba(255,255,255,0.1),transparent)]" />
+                  <div className="absolute inset-0 bg-[radial-gradient(300px_at_50%_120%,rgba(16,185,129,0.1),transparent)] opacity-0 transition-opacity group-hover:opacity-100" />
                 </CardContent>
               </Card>
             </motion.div>
           ))}
         </div>
-      </motion.section>
+      </section>
     </motion.main>
   );
 }

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
+import { FiArrowUpRight } from "react-icons/fi";
 
 interface CardProps {
   title?: string;
@@ -11,51 +12,79 @@ interface CardProps {
   footer?: ReactNode;
   onClick?: () => void;
   className?: string;
+  hoverEffect?: boolean;
 }
 
-export function Card({ title, subtitle, icon, children, footer, onClick, className }: CardProps) {
+export function Card({
+  title,
+  subtitle,
+  icon,
+  children,
+  footer,
+  onClick,
+  className,
+  hoverEffect = true,
+}: CardProps) {
   return (
     <motion.div
-      className={`relative bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:border-indigo-400/30 transition-all ${
+      className={`relative overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 transition-all ${
         onClick ? "cursor-pointer" : ""
       } ${className}`}
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      whileHover={hoverEffect ? { y: -4 } : undefined}
+      whileTap={onClick ? { scale: 0.98 } : undefined}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       onClick={onClick}
     >
-      {/* Hover effect overlay */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-100 transition-opacity bg-[radial-gradient(200px_at_50%_150%,rgba(99,102,241,0.1),transparent)]" />
+      {/* Subtle hover gradient */}
+      <div className="absolute inset-0 bg-[radial-gradient(400px_at_50%_120%,rgba(16,185,129,0.03),transparent)] opacity-0 transition-opacity duration-300 hover:opacity-100" />
 
-      {/* Header */}
-      {title && (
-        <div className="flex items-start gap-4 mb-6">
-          {icon && (
-            <div className="p-3 bg-indigo-500/10 rounded-xl text-indigo-400">
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ repeat: Infinity, duration: 4 }}
-              >
-                {icon}
-              </motion.div>
+      <div className="relative z-10 h-full flex flex-col">
+        {/* Header */}
+        {title && (
+          <div className="p-6 pb-4">
+            <div className="flex items-start gap-4">
+              {icon && (
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10 backdrop-blur-sm">
+                  <motion.div
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="text-emerald-500 text-xl"
+                  >
+                    {icon}
+                  </motion.div>
+                </div>
+              )}
+              <div className="flex-1 space-y-1">
+                <h3 className="text-xl font-semibold text-white tracking-tight">
+                  {title}
+                </h3>
+                {subtitle && (
+                  <p className="text-sm text-neutral-400 font-medium tracking-wide">
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+              {onClick && (
+                <FiArrowUpRight className="text-neutral-500 mt-1.5 shrink-0" />
+              )}
             </div>
-          )}
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-100">{title}</h3>
-            {subtitle && <p className="text-sm text-gray-400 mt-1">{subtitle}</p>}
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="p-6 pt-0 flex-1">
+          <div className="text-neutral-300 font-normal tracking-wide leading-relaxed">
+            {children}
           </div>
         </div>
-      )}
 
-      {/* Content */}
-      <div className="text-gray-300 relative z-10">{children}</div>
-
-      {/* Footer */}
-      {footer && (
-        <div className="mt-6 pt-4 border-t border-white/5 backdrop-blur-sm">
-          {footer}
-        </div>
-      )}
+        {/* Footer */}
+        {footer && (
+          <div className="border-t border-neutral-800 bg-neutral-950/30 px-6 py-4 backdrop-blur-lg">
+            {footer}
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 }
@@ -63,12 +92,15 @@ export function Card({ title, subtitle, icon, children, footer, onClick, classNa
 interface CardContentProps {
   children: ReactNode;
   className?: string;
+  noPadding?: boolean;
 }
 
-export function CardContent({ children, className }: CardContentProps) {
+export function CardContent({ children, className, noPadding }: CardContentProps) {
   return (
-    <div className={`p-4 transition-all ${className}`}>
-      {children}
+    <div className={`${noPadding ? "" : "px-6 py-4"} ${className}`}>
+      <div className="text-neutral-300 font-normal tracking-wide leading-relaxed">
+        {children}
+      </div>
     </div>
   );
 }

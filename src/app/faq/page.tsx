@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { FiPlus, FiEdit, FiTrash, FiChevronRight } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 interface FAQ {
   id: number;
@@ -12,14 +14,21 @@ interface FAQ {
   updatedAt: string;
 }
 
-const textContainerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.2
+    }
+  },
 };
 
-const textVariant = {
-  hidden: { opacity: 0, y: 5 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+const itemVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0 },
 };
 
 export default function FAQListPage() {
@@ -43,9 +52,7 @@ export default function FAQListPage() {
   async function handleDelete(id: number) {
     if (!confirm("Are you sure you want to delete this FAQ?")) return;
     try {
-      const res = await fetch(`/api/faq/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/faq/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error(`Error: ${res.statusText}`);
       setFaqs((prev) => prev.filter((faq) => faq.id !== id));
     } catch (err: any) {
@@ -54,113 +61,94 @@ export default function FAQListPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-neutral-950 p-6">
+      <div className="max-w-4xl mx-auto space-y-8">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-10">
-          <motion.h1
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl font-bold text-white mb-4 sm:mb-0"
-            style={{ fontFamily: "'Arial Black', Gadget, sans-serif" }}
-          >
-            Frequently Asked Questions
-          </motion.h1>
-          <Link href="/faq/add">
-            <button className="flex items-center gap-2 bg-white text-black py-2 px-6 rounded-full font-bold transition-colors duration-200 hover:bg-[#25D366] hover:text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Add New
-            </button>
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pb-6 border-b border-neutral-800"
+        >
+          <div className="space-y-1">
+            <h1 className="text-3xl font-semibold text-white">FAQ Management</h1>
+            <p className="text-neutral-400">Manage frequently asked questions</p>
+          </div>
+          <Link href="/faq/add" className="w-full sm:w-auto">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full sm:w-auto flex items-center gap-2 bg-emerald-600/20 text-emerald-500 px-6 py-3 rounded-lg border border-emerald-500/30 hover:border-emerald-500/50 transition-colors"
+            >
+              <FiPlus className="text-lg" />
+              <span className="font-medium">New Question</span>
+            </motion.button>
           </Link>
-        </div>
+        </motion.header>
 
         {/* Error Message */}
         {error && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-red-600 text-white px-4 py-3 rounded mb-6"
+            className="p-4 bg-red-500/10 text-red-500 rounded-lg border border-red-500/20"
           >
             {error}
           </motion.div>
         )}
 
         {/* FAQ List */}
-        <ul className="space-y-6">
-          {faqs.map((faq, index) => (
+        <motion.ul
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-4"
+        >
+          {faqs.map((faq) => (
             <motion.li
               key={faq.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 shadow-md transition-colors duration-200 hover:bg-white/10"
+              variants={itemVariants}
+              className="group relative overflow-hidden rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition-colors"
             >
-              <motion.div
-                variants={textContainerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <motion.h3
-                  variants={textVariant}
-                  className="text-2xl font-semibold text-gray-200"
-                >
-                  {faq.question}
-                </motion.h3>
-                <motion.p
-                  variants={textVariant}
-                  className="text-gray-400 leading-relaxed"
-                >
-                  {faq.answer}
-                </motion.p>
-              </motion.div>
-              <div className="flex items-center gap-4 mt-4">
-                <Link href={`/faq/edit?id=${faq.id}`}>
-                  <button className="flex items-center gap-2 bg-green-600 text-white py-2 px-4 rounded-lg font-medium shadow-sm transition-colors duration-200 hover:bg-green-700">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
+              <div className="p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-3 flex-1">
+                    <h3 className="text-lg font-medium text-white">
+                      {faq.question}
+                    </h3>
+                    <p className="text-neutral-400 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+                  <FiChevronRight className="text-neutral-500 mt-1.5 shrink-0 group-hover:text-neutral-300 transition-colors" />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-4 pt-4 border-t border-neutral-800 flex items-center gap-3">
+                  <Link href={`/faq/edit?id=${faq.id}`}>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      className="flex items-center gap-2 px-4 py-2 text-neutral-300 hover:text-white rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors"
                     >
-                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                    </svg>
-                    Edit
-                  </button>
-                </Link>
-                <button
-                  onClick={() => handleDelete(faq.id)}
-                  className="flex items-center gap-2 bg-red-600 text-white py-2 px-4 rounded-lg font-medium shadow-sm transition-colors duration-200 hover:bg-red-700"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+                      <FiEdit className="text-sm" />
+                      <span className="text-sm font-medium">Edit</span>
+                    </motion.button>
+                  </Link>
+                  <motion.button
+                    onClick={() => handleDelete(faq.id)}
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center gap-2 px-4 py-2 text-red-500 hover:text-red-400 rounded-lg bg-red-500/10 hover:bg-red-500/20 transition-colors"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Delete
-                </button>
+                    <FiTrash className="text-sm" />
+                    <span className="text-sm font-medium">Delete</span>
+                  </motion.button>
+                </div>
               </div>
+
+              {/* Hover effect */}
+              <div className="absolute inset-0 bg-[radial-gradient(200px_at_50%_120%,rgba(16,185,129,0.05),transparent] opacity-0 group-hover:opacity-100 transition-opacity" />
             </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       </div>
     </div>
   );
