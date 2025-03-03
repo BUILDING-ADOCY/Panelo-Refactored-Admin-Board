@@ -1,11 +1,27 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiBell, FiSearch, FiChevronDown } from "react-icons/fi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check if the token cookie exists
+  useEffect(() => {
+    if (document.cookie.includes("token=")) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setIsAuthenticated(false);
+    window.location.href = "/auth/login";
+  };
 
   return (
     <motion.nav
@@ -41,6 +57,23 @@ export default function Navbar() {
 
       {/* Right Section */}
       <div className="flex items-center gap-6">
+        {/* Login/Logout Button */}
+        {isAuthenticated ? (
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 px-4 py-2 rounded"
+          >
+            Logout
+          </button>
+        ) : (
+          <button
+            onClick={() => (window.location.href = "/auth/login")}
+            className="bg-blue-500 px-4 py-2 rounded"
+          >
+            Login
+          </button>
+        )}
+
         {/* Notifications */}
         <motion.button
           whileHover={{ scale: 1.1 }}

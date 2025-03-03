@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { FiBarChart, FiBell, FiUsers, FiTrendingUp, FiClock } from "react-icons/fi";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
-import { JSX } from "react";
+import React from "react";
 
 export default function Home() {
   return (
@@ -58,32 +58,28 @@ export default function Home() {
                 title: "Active Users", 
                 value: "2.8K", 
                 trend: "+14.2%", 
-                status: 'positive',
-                delay: 0.1
+                status: 'positive'
               },
               { 
                 icon: <FiBarChart className="w-6 h-6" />, 
                 title: "System Load", 
                 value: "68%", 
                 trend: "-3.1%", 
-                status: 'negative',
-                delay: 0.2
+                status: 'negative'
               },
               { 
                 icon: <FiBell className="w-6 h-6" />, 
                 title: "Alerts", 
                 value: "9 New", 
                 trend: "2 Critical", 
-                status: 'warning',
-                delay: 0.3
+                status: 'warning'
               },
               { 
                 icon: <FiClock className="w-6 h-6" />, 
                 title: "Response Time", 
                 value: "142ms", 
                 trend: "P99", 
-                status: 'neutral',
-                delay: 0.4
+                status: 'neutral'
               },
             ].map((card, index) => (
               <DashboardCard
@@ -93,7 +89,8 @@ export default function Home() {
                 value={card.value}
                 trend={card.trend}
                 status={card.status}
-                index={index}
+                                index={index}
+
               />
             ))}
           </motion.div>
@@ -109,26 +106,26 @@ function DashboardCard({
   value,
   trend,
   status,
-  index,
 }: {
-  icon: JSX.Element;
+  icon: React.ReactNode;
   title: string;
   value: string;
   trend: string;
   status: 'positive' | 'negative' | 'warning' | 'neutral';
-  index: number;
 }) {
   const statusConfig = {
     positive: { color: '#00FF87', icon: FiTrendingUp },
     negative: { color: '#FF4D4D', icon: FiTrendingUp },
     warning: { color: '#FFD600', icon: FiTrendingUp },
     neutral: { color: '#FFFFFF', icon: FiTrendingUp }
-  } as const;
+  };
 
   const IconComponent = statusConfig[status].icon;
 
   return (
     <motion.div
+      initial="hidden"
+      animate="visible"
       variants={{
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 }

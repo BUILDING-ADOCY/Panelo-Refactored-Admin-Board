@@ -1,4 +1,3 @@
-// src/app/api/faq/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -17,10 +16,8 @@ export async function GET() {
 // POST /api/faq - Create a new FAQ
 export async function POST(request: Request) {
   try {
-    // Extract question, answer, and userID from the request body.
     const { question, answer, userID } = await request.json();
 
-    // Create a new FAQ with the provided fields.
     const newFAQ = await prisma.fAQ.create({
       data: { question, answer, userID },
     });

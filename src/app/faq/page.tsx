@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiPlus, FiEdit, FiTrash, FiChevronRight } from "react-icons/fi";
-import { useRouter } from "next/navigation";
 
 interface FAQ {
   id: number;
@@ -13,7 +12,6 @@ interface FAQ {
   createdAt: string;
   updatedAt: string;
 }
-
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -124,7 +122,8 @@ export default function FAQListPage() {
 
                 {/* Action Buttons */}
                 <div className="mt-4 pt-4 border-t border-neutral-800 flex items-center gap-3">
-                  <Link href={`/faq/edit?id=${faq.id}`}>
+                  {/* Updated edit link to pass the id as a dynamic route segment */}
+                  <Link href={`/faq/edit/${faq.id}`}>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       className="flex items-center gap-2 px-4 py-2 text-neutral-300 hover:text-white rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors"
