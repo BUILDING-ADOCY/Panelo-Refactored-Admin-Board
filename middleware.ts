@@ -35,4 +35,4 @@ export async function middleware(req: NextRequest) {
 }
 
 // ✅ Apply middleware to protect dashboard & admin routes
-export const config = { matcher: ["/dashboard/:path*", "/admin/:path*"] };
+export const config = { matcher: ["admin-panel/src/app/page.tsx/:path*", "/admin/:path*"] };

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Admin Panel | Next.js App",
     description: "Optimized Next.js Admin Panel with Firebase Authentication",
-    siteName: "Admin Panel",
+    siteName: "Panelo",
     url: "https://yourwebsite.com",
     type: "website",
   },

@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
-      router.push("/dashboard"); // Redirect to Dashboard after signup
+      router.push("/"); // Redirect to Dashboard after signup
     } catch (error: any) {
       console.error("Signup Error:", error);
       alert(handleAuthError(error.code));
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
-      router.push("/dashboard"); // Redirect to Dashboard after login
+      router.push("/"); // Redirect to Main Page after login
     } catch (error: any) {
       console.error("Login Error:", error);
       alert(handleAuthError(error.code));
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       setUser(userCredential.user);
-      router.push("/dashboard"); // Redirect to Dashboard after login
+      router.push("/"); // Redirect to Main Page after login
     } catch (error) {
       console.error("Login Error:", error);
       alert("Google login failed. Please try again.");
