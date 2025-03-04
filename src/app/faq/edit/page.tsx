@@ -109,45 +109,33 @@ export default function EditFaqPage() {
 
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.1 }}
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
             <label className="block text-sm font-medium text-neutral-400 mb-2">
               Question
             </label>
             <input
               value={formData.question}
-              onChange={(e) => setFormData({...formData, question: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, question: e.target.value })}
               className="w-full bg-neutral-800/50 border border-neutral-800 rounded-lg px-4 py-3 text-white placeholder-neutral-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
               placeholder="Enter your question"
               required
             />
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <label className="block text-sm font-medium text-neutral-400 mb-2">
               Answer
             </label>
             <textarea
               value={formData.answer}
-              onChange={(e) => setFormData({...formData, answer: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
               className="w-full bg-neutral-800/50 border border-neutral-800 rounded-lg px-4 py-3 text-white placeholder-neutral-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all h-32 resize-none"
               placeholder="Provide detailed answer"
               required
             />
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
             <button
               type="submit"
               disabled={isLoading}
