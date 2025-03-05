@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { adminAuth } from "@/lib/firebaseAdmin"; // Use Firebase Admin SDK
 
 interface DecodedToken {
-  id: string;
+  uid: string;
   email: string;
   role: "ADMIN" | "MODERATOR" | "USER";
 }
@@ -16,15 +16,15 @@ export async function middleware(req: NextRequest) {
 
   try {
     // ✅ Verify token using Firebase Admin SDK
-    const decodedToken = await adminAuth.verifyIdToken(token) as unknown as DecodedToken;
+    const decodedToken = await adminAuth.verifyIdToken(token);
 
     if (!decodedToken) {
       return NextResponse.redirect(new URL("/auth/login", req.url));
     }
 
-    // ✅ If user is not an admin and trying to access admin routes, redirect them
+    // ✅ If user is trying to access `/admin`, ensure they have ADMIN role
     if (req.nextUrl.pathname.startsWith("/admin") && decodedToken.role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/", req.url)); // Redirect to home if not admin
     }
 
     return NextResponse.next();
@@ -34,5 +34,5 @@ export async function middleware(req: NextRequest) {
   }
 }
 
-// ✅ Apply middleware to protect dashboard & admin routes
-export const config = { matcher: ["admin-panel/src/app/page.tsx/:path*", "/admin/:path*"] };
+// ✅ Apply middleware to all protected routes except `/auth`
+export const config = { matcher: ["/((?!auth).*)"] };
