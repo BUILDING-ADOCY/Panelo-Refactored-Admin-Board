@@ -87,12 +87,12 @@ export default function Sidebar() {
             text="Notifications"
             active={pathname === "/notifications"}
           /> */}
-          <SidebarItem 
+          {/* <SidebarItem 
             href="/settings" 
             icon={<FaCog className="w-5 h-5" />} 
             text="Settings" 
             active={pathname === "/settings"} 
-          />
+          /> */}
           <SidebarItem 
             href="/faq" 
             icon={<FaQuestionCircle className="w-5 h-5" />} 
@@ -110,7 +110,7 @@ export default function Sidebar() {
         className="mt-auto pt-8 border-t border-gray-800/50"
       >
         <p className="text-sm text-gray-400 font-light tracking-wide">
-          © 2025 AdminSuite v2.0
+          © 2025 AdminSuite v3.0
         </p>
       </motion.div>
     </motion.aside>
