@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
@@ -12,10 +12,19 @@ import UserMetrics from "./UserMetrics";
 import { Card, CardContent } from "@/components/Card";
 
 export default function DashboardPage() {
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      user ? console.log("User is logged in: ", user.email) : console.log("User is logged out");
+      if (user) {
+        console.log("User is logged in: ", user.email);
+        setUserEmail(user.email);
+      } else {
+        console.log("User is logged out");
+        setUserEmail(null);
+      }
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -32,9 +41,19 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-semibold text-white lg:text-4xl">Dashboard</h1>
           <p className="text-sm text-neutral-400">Platform Analytics & Management</p>
         </div>
-        <div className="flex items-center gap-3 rounded-lg bg-neutral-900 px-4 py-2">
-          <div className="h-2 w-2 rounded-full bg-emerald-500" />
-          <span className="text-sm text-neutral-300">Operational Status: Normal</span>
+        <div className="flex items-center gap-4">
+          {/* Realtime live badge */}
+          <div className="flex items-center gap-2 rounded-lg bg-neutral-900 px-4 py-2">
+            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-sm text-neutral-300">Live</span>
+          </div>
+
+          {/* Optional: Show user email if logged in */}
+          {userEmail && (
+            <div className="hidden sm:block rounded-lg bg-neutral-900 px-4 py-2 text-sm text-neutral-300">
+              Logged in as <span className="text-white font-medium">{userEmail}</span>
+            </div>
+          )}
         </div>
       </header>
 

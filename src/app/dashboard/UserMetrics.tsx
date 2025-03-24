@@ -3,36 +3,57 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/Card";
 import Charts from "@/components/Charts";
-import { FiActivity, FiClock, FiUsers, FiAlertCircle } from "react-icons/fi";
-
-const statsData = [
-  {
-    title: "TOTAL QUERIES",
-    value: "12,345",
-    icon: <FiActivity />,
-    trend: "+14.2%",
-    metric: "AVG RESPONSE TIME",
-    metricValue: "1.2s"
-  },
-  {
-    title: "ACTIVE USERS",
-    value: "5,678",
-    icon: <FiUsers />,
-    trend: "+22.1%",
-    metric: "FREQUENT INQUIRY",
-    metricValue: '"Exam Schedule Availability"'
-  },
-  {
-    title: "USAGE PATTERNS",
-    value: "PEAK TIMES",
-    icon: <FiClock />,
-    trend: "+9.3%",
-    metric: "DAILY PEAK",
-    metricValue: "7:00 - 10:00 PM"
-  }
-];
+import { FiActivity, FiClock, FiUsers } from "react-icons/fi";
+import { useDashboardSocket } from "@/hooks/useDashboardSocket"; // 👈 WebSocket Hook
 
 export default function DashboardPage() {
+  const stats = useDashboardSocket();
+
+  const statsData = [
+    {
+      title: "TOTAL QUERIES",
+      value: stats ? stats.totalQueries.toLocaleString() : "Loading...",
+      icon: <FiActivity />,
+      trend: "+14.2%", // Optional: make dynamic
+      metric: "AVG RESPONSE TIME",
+      metricValue: stats ? `${stats.avgResponseTime}s` : "Loading...",
+    },
+    {
+      title: "ACTIVE USERS",
+      value: stats ? stats.activeUsers.toLocaleString() : "Loading...",
+      icon: <FiUsers />,
+      trend: "+22.1%",
+      metric: "FREQUENT INQUIRY",
+      metricValue: stats?.frequentInquiry ?? "Loading...",
+    },
+    {
+      title: "USAGE PATTERNS",
+      value: "PEAK TIMES",
+      icon: <FiClock />,
+      trend: "+9.3%",
+      metric: "DAILY PEAK",
+      metricValue: stats?.dailyPeak ?? "Loading...",
+    },
+  ];
+
+  const metricFooter = [
+    {
+      label: "Avg. Response",
+      value: stats ? `${stats.avgResponseTime}s` : "Loading...",
+      change: "+0.4s",
+    },
+    {
+      label: "Active Users",
+      value: stats ? `${(stats.activeUsers / 1000).toFixed(1)}k` : "Loading...",
+      change: "↑12%",
+    },
+    {
+      label: "Resolutions",
+      value: stats ? `${stats.resolutions}%` : "Loading...",
+      change: "↑4.2%",
+    },
+  ];
+
   return (
     <div className="p-6 space-y-8">
       {/* Metrics Grid */}
@@ -100,13 +121,13 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="flex gap-2">
-                {['7D', '30D', '90D'].map((range, idx) => (
+                {["7D", "30D", "90D"].map((range, idx) => (
                   <button
                     key={range}
                     className={`px-3 py-1.5 rounded-lg text-sm ${
                       idx === 0
-                        ? 'bg-emerald-500/10 text-emerald-500'
-                        : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-700'
+                        ? "bg-emerald-500/10 text-emerald-500"
+                        : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700"
                     }`}
                   >
                     {range}
@@ -114,24 +135,18 @@ export default function DashboardPage() {
                 ))}
               </div>
             </div>
-            
-            {/* Integrated Charts Component */}
+
+            {/* Integrated Charts Component (Already Real-Time) */}
             <Charts />
-            
+
             <div className="mt-6 pt-6 border-t border-neutral-800 flex flex-col sm:flex-row gap-6">
-              {[
-                { label: 'Avg. Response', value: '1.2s', change: '+0.4s' },
-                { label: 'Active Users', value: '5.6k', change: '↑12%' },
-                { label: 'Resolutions', value: '89%', change: '↑4.2%' },
-              ].map((metric, idx) => (
-                <div key={metric.label} className="flex-1">
+              {metricFooter.map((metric, idx) => (
+                <div key={idx} className="flex-1">
                   <div className="text-sm text-neutral-400">{metric.label}</div>
                   <div className="text-xl font-semibold text-white mt-1">
                     {metric.value}
                   </div>
-                  <div className="text-xs mt-1 text-emerald-500">
-                    {metric.change}
-                  </div>
+                  <div className="text-xs mt-1 text-emerald-500">{metric.change}</div>
                 </div>
               ))}
             </div>

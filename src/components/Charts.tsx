@@ -12,22 +12,32 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  Legend,
   Area,
 } from "recharts";
 import { FiActivity, FiUsers } from "react-icons/fi";
-
-const chatbotData = [
-  { day: "Mon", queries: 120, users: 50 },
-  { day: "Tue", queries: 98, users: 45 },
-  { day: "Wed", queries: 150, users: 70 },
-  { day: "Thu", queries: 130, users: 60 },
-  { day: "Fri", queries: 170, users: 80 },
-  { day: "Sat", queries: 200, users: 100 },
-  { day: "Sun", queries: 220, users: 110 },
-];
+import { useLiveChartData } from "@/hooks/useLiveChartData";
 
 export default function Charts() {
+  const chatbotData = useLiveChartData();
+
+  const avgQueries =
+    chatbotData.length > 0
+      ? (chatbotData.reduce((acc, d) => acc + d.queries, 0) / chatbotData.length).toFixed(1)
+      : "Loading...";
+
+  const peakUsers =
+    chatbotData.length > 0
+      ? Math.max(...chatbotData.map((d) => d.users))
+      : "Loading...";
+
+  const engagementRate =
+    chatbotData.length > 0
+      ? Math.round(
+          (chatbotData.reduce((acc, d) => acc + d.users, 0) /
+            (chatbotData.length * 120)) * 100
+        )
+      : "Loading...";
+
   return (
     <motion.section
       className="bg-neutral-950 rounded-2xl p-6 border border-neutral-800"
@@ -168,15 +178,15 @@ export default function Charts() {
       <div className="mt-6 pt-6 border-t border-neutral-800 flex gap-6">
         <div className="flex-1">
           <h4 className="text-sm text-neutral-400 mb-1">Avg. Queries/Day</h4>
-          <p className="text-2xl font-semibold text-white">156.8</p>
+          <p className="text-2xl font-semibold text-white">{avgQueries}</p>
         </div>
         <div className="flex-1">
           <h4 className="text-sm text-neutral-400 mb-1">Peak Users</h4>
-          <p className="text-2xl font-semibold text-white">110</p>
+          <p className="text-2xl font-semibold text-white">{peakUsers}</p>
         </div>
         <div className="flex-1">
           <h4 className="text-sm text-neutral-400 mb-1">Engagement Rate</h4>
-          <p className="text-2xl font-semibold text-white">68%</p>
+          <p className="text-2xl font-semibold text-white">{engagementRate}%</p>
         </div>
       </div>
     </motion.section>

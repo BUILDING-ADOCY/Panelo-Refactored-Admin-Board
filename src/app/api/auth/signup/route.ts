@@ -1,62 +1,32 @@
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { generateToken } from "@/lib/auth";
-import argon2 from "argon2";
-import cookie from "cookie";
+import { auth } from "@/lib/firebaseClient";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const { email, password, role } = await req.json();
 
-    // Validate input
     if (!email || !password) {
-      return new Response(JSON.stringify({ error: "Missing email or password" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+      return NextResponse.json({ error: "Email and password are required." }, { status: 400 });
     }
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return new Response(JSON.stringify({ error: "User already exists" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    // Create user in Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const firebaseUser = userCredential.user;
 
-    // Hash the password using argon2
-    const hashedPassword = await argon2.hash(password);
-
-    // Create user with default role USER
-    const user = await prisma.user.create({
-      data: { email, password: hashedPassword, role: "USER" },
+    // Save user to Prisma (PostgreSQL)
+    const newUser = await prisma.user.create({
+      data: {
+        email,
+        firebaseId: firebaseUser.uid,
+        role: role || "USER",
+        password
+      },
     });
 
-    // Generate JWT token
-    const token = generateToken(user);
-
-    // Set JWT token in HTTP-only cookie
-    const response = new Response(JSON.stringify({ message: "Signup successful" }), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    });
-    response.headers.set(
-      "Set-Cookie",
-      cookie.serialize("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 3600, // 1 hour
-        path: "/",
-      })
-    );
-
-    return response;
-  } catch (error) {
-    console.error("Signup Error:", error);
-    return new Response(JSON.stringify({ error: "Something went wrong" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ message: "User registered successfully", user: newUser });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
